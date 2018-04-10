@@ -60,8 +60,8 @@ struct Map {
 		unit->_pos._x = x;
 		unit->_pos._y = y;
 
-		PositionMap view = select_range_unit(x, y);
-		for (PositionMap::iterator it = view.begin(); it != view.end(); ++it) {
+		UnitMap view = select_range_unit(x, y);
+		for (UnitMap::iterator it = view.begin(); it != view.end(); ++it) {
 			it->second->on_aoi_event(AE_ENTER, unit);
 			unit->on_aoi_event(AE_ENTER, it->second);
 		}
@@ -80,8 +80,8 @@ struct Map {
 
 		assert(it->second == unit);
 
-		PositionMap view = select_range_unit(unit->_pos._x, unit->_pos._y);
-		for (PositionMap::iterator itp = view.begin(); itp != view.end(); ++itp) {
+		UnitMap view = select_range_unit(unit->_pos._x, unit->_pos._y);
+		for (UnitMap::iterator itp = view.begin(); itp != view.end(); ++itp) {
 			if (itp->second == unit) continue;
 			itp->second->on_aoi_event(AE_LEAVE, unit);
 			unit->on_aoi_event(AE_LEAVE, itp->second);
@@ -103,10 +103,10 @@ struct Map {
 		// some body already stand hear.
 		if (_x_list.find(x) != _x_list.end() && _y_list.find(y) != _y_list.end()) return ;
 
-		PositionMap old_unit = select_range_unit(unit->_pos._x, unit->_pos._y);
-		PositionMap new_unit = select_range_unit(x, y);
+		UnitMap old_unit = select_range_unit(unit->_pos._x, unit->_pos._y);
+		UnitMap new_unit = select_range_unit(x, y);
 
-		for (PositionMap::iterator it = old_unit.begin(); it != old_unit.end(); ++it) {
+		for (UnitMap::iterator it = old_unit.begin(); it != old_unit.end(); ++it) {
 			if (it->first == unit->_id) continue;
 			if (new_unit.find(it->first) == new_unit.end()) {
 				// send leave aoi
@@ -119,7 +119,7 @@ struct Map {
 			}
 		}
 
-		for (PositionMap::iterator it = new_unit.begin(); it != new_unit.end(); ++it) {
+		for (UnitMap::iterator it = new_unit.begin(); it != new_unit.end(); ++it) {
 			//just send enter aoi
 			if (it->first == unit->_id) continue;
 			it->second->on_aoi_event(AE_ENTER, unit);
@@ -142,11 +142,11 @@ struct Map {
 		} \
 	} while (0)
 
-	PositionMap select_range_unit(int x, int y) {
+	UnitMap select_range_unit(int x, int y) {
 		assert(x >= _start._x && x <= (_start._x + _width));
 		assert(y >= _start._y && y <= (_start._y + _height));
 	
-		PositionMap ret;
+		UnitMap ret;
 		FILL_RANGE(_x_list, x, _x_view, ret);
 		FILL_RANGE(_y_list, y, _y_view, ret);
 
